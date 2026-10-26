@@ -63,7 +63,7 @@ export async function saveCustomer(
     const { data: existing } = await supabase
       .from('customers')
       .select('address, location, geocode_level')
-      .eq('id', (data as { id: string }).id)
+      .eq('id', rawId)
       .single()
     currentCustomer = existing
   }
@@ -97,7 +97,7 @@ export async function saveCustomer(
     const { error } = await supabase
       .from('customers')
       .update(payload)
-      .eq('id', (data as { id: string }).id)
+      .eq('id', rawId)
 
     if (error) {
       console.error('Customer update error:', error.message)
@@ -132,7 +132,7 @@ export async function saveCustomer(
 
   revalidatePath('/operator/customers')
   if (isEdit) {
-    revalidatePath(`/operator/customers/${(data as { id: string }).id}`)
+    revalidatePath(`/operator/customers/${rawId}`)
   }
   redirect('/operator/customers')
 }
